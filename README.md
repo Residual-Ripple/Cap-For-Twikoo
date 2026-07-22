@@ -85,6 +85,7 @@ openssl rand -hex 32
 # 设置为 Cloudflare Secret（不会存入 wrangler.jsonc）
 npx wrangler secret put CAP_SECRET_KEY
 # 然后粘贴你的密钥值
+```
 
 #### 2. 在 Twikoo 管理面板中配置
 
@@ -93,11 +94,11 @@ npx wrangler secret put CAP_SECRET_KEY
 | 配置项 | 值 | 说明 |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | 启用 Cap 验证码 |
-| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api` | Cap 服务地址（末尾带 `/api`） |
+| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api/` | Cap 服务地址（末尾带 `/api/`） |
 | `CAP_SECRET_KEY` | 与上一步设置的密钥相同 | 用于服务端验证的密钥 |
 
-> 💡 注意：`CAP_API_ENDPOINT` 要带 `/api` 后缀，这样前端 widget 才能正确调用 `/api/challenge` 和 `/api/redeem`，后端（Twikoo）也能调用 `/api/siteverify`。
-```
+> 💡 注意：`CAP_API_ENDPOINT` 要带 `/api/` 后缀，这样前端 widget 才能正确调用 `/api/challenge` 和 `/api/redeem`，后端（Twikoo）也能调用 `/api/siteverify`。
+
 
 
 ## 🔌 API 参考
