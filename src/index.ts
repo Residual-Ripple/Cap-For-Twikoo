@@ -324,6 +324,80 @@ export default {
       }
     }
 
+		// === 在文件顶部，Env 接口中增加 CAP_SECRET_KEY ===
+		interface Env {
+		  CAP_STORAGE: DurableObjectNamespace;
+		  CAP_SECRET_KEY: string; // Cloudflare Secrets 注入，不在 git 中
+		}
+		
+		// === 在 fetch 函数中，/api/validate 路由后面（或任意合适位置）添加以下代码 ===
+		
+		// Route: POST /api/siteverify (兼容官方 Cap 的 siteverify 接口，供 Twikoo 后端调用)
+		if (request.method === "POST" && url.pathname === "/api/siteverify") {
+		  let body: { secret?: string; response?: string };
+		  try {
+		    body = await request.json();
+		  } catch {
+		    return new Response(
+		      JSON.stringify({ success: false, error: "Invalid request body" }),
+		      {
+		        status: 400,
+		        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		      }
+		    );
+		  }
+		  const { secret, response: token } = body ?? {};
+		  if (!secret || !token) {
+		    return new Response(
+		      JSON.stringify({ success: false, error: "Missing secret or response" }),
+		      {
+		        status: 400,
+		        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		      }
+		    );
+		  }
+		  // 验证 secret key（匹配 Cloudflare 中设置的 CAP_SECRET_KEY）
+		  if (secret !== env.CAP_SECRET_KEY) {
+		    return new Response(
+		      JSON.stringify({ success: false, error: "Invalid secret" }),
+		      {
+		        status: 403,
+		        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		      }
+		    );
+		  }
+		  // 验证 token——复用已有的 validateAndConsumeToken 逻辑
+		  const tokenHash = await hashToken(token);
+		  try {
+		    await storageStub.validateAndConsumeToken(tokenHash, false);
+		    return new Response(JSON.stringify({ success: true }), {
+		      headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		    });
+		  } catch (err: unknown) {
+		    if (err instanceof Error) {
+		      const msg = err.message;
+		      let status = 400;
+		      if (msg === "NOT_FOUND") status = 404;
+		      else if (msg === "EXPIRED") status = 410;
+		      return new Response(
+		        JSON.stringify({ success: false, error: msg }),
+		        {
+		          status,
+		          headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		        }
+		      );
+		    }
+		    return new Response(
+		      JSON.stringify({ success: false, error: "Token invalid" }),
+		      {
+		        status: 400,
+		        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+		      }
+		    );
+		  }
+		}
+
+
     return new Response("Not Found", {
       status: 404,
       headers: CORS_HEADERS,
