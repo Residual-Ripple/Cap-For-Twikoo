@@ -8,6 +8,16 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2025-07-24",
 	"compatibility_flags": ["nodejs_compat"],
+	"durable_objects": {
+	    "bindings": [
+	      {
+	        "name": "CAP_STORAGE",
+	        "class_name": "CapStorageDurableObject"
+	      }
+	    ]
+	  },
+	  // 不写 vars.CAP_SECRET_KEY，用 Cloudflare Secrets 注入
+	"route": null,
 	"workers_dev": false,
 	"migrations": [
 		{
