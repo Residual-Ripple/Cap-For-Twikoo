@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>CAP Worker Service</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<style>
+			:root {
+				--primary-gradient: linear-gradient(135deg, rgba(0, 113, 227, 0.92) 0%, rgba(10, 132, 255, 0.72) 100%);
+				--secondary-gradient: linear-gradient(135deg, rgba(10, 132, 255, 0.85) 0%, rgba(90, 200, 250, 0.65) 100%);
+				--accent-gradient: linear-gradient(135deg, rgba(0, 113, 227, 0.9) 0%, rgba(10, 132, 255, 0.6) 100%);
+				--dark-gradient: linear-gradient(135deg, #1d1d1f 0%, #2c2c2e 100%);
+				--success-color: #34c759;
+				--warning-color: #ff9f0a;
+				--error-color: #ff453a;
+				--text-primary: #1d1d1f;
+				--text-secondary: rgba(29, 29, 31, 0.72);
+				--text-muted: rgba(29, 29, 31, 0.5);
+				--bg-primary: #ffffff;
+				--bg-secondary: #f5f5f7;
+				--bg-tertiary: rgba(255, 255, 255, 0.7);
+				--border-light: rgba(60, 60, 67, 0.18);
+				--shadow-sm: 0 16px 40px -24px rgba(15, 23, 42, 0.18);
+				--shadow-md: 0 28px 60px -24px rgba(15, 23, 42, 0.2);
+				--shadow-lg: 0 36px 80px -24px rgba(15, 23, 42, 0.22);
+				--shadow-xl: 0 44px 120px -30px rgba(15, 23, 42, 0.24);
+				--brand-color: #0071e3;
+				--code-bg: #111827;
+				--code-border: rgba(148, 163, 184, 0.35);
+				--accent-soft: rgba(0, 113, 227, 0.12);
+				--surface-primary: rgba(255, 255, 255, 0.82);
+				--surface-card: rgba(255, 255, 255, 0.9);
+				--surface-overlay: rgba(255, 255, 255, 0.85);
+				--surface-muted: rgba(0, 0, 0, 0.04);
+				--border-soft: rgba(60, 60, 67, 0.12);
+				--border-strong: rgba(60, 60, 67, 0.2);
+				--code-surface: rgba(245, 245, 247, 0.92);
+				--widget-glow-primary: rgba(0, 113, 227, 0.38);
+				--widget-glow-secondary: rgba(90, 200, 250, 0.28);
+				--widget-glow-tertiary: rgba(30, 41, 59, 0.32);
+				--widget-glow-highlight: rgba(255, 255, 255, 0.65);
+			}
+
+			/* Dark theme overrides */
+			[data-theme="dark"] {
+				--text-primary: #f5f5f7;
+				--text-secondary: rgba(235, 235, 245, 0.7);
+				--text-muted: rgba(235, 235, 245, 0.5);
+				--bg-primary: rgba(30, 30, 32, 0.88);
+				--bg-secondary: #000000;
+				--bg-tertiary: rgba(44, 44, 46, 0.7);
+				--border-light: rgba(235, 235, 245, 0.2);
+				--shadow-sm: 0 18px 45px -24px rgba(0, 0, 0, 0.55);
+				--shadow-md: 0 32px 70px -32px rgba(0, 0, 0, 0.6);
+				--shadow-lg: 0 42px 100px -36px rgba(0, 0, 0, 0.65);
+				--shadow-xl: 0 50px 140px -40px rgba(0, 0, 0, 0.7);
+				--brand-color: #0a84ff;
+				--code-bg: #0b1120;
+				--code-border: rgba(59, 130, 246, 0.28);
+				--accent-soft: rgba(10, 132, 255, 0.24);
+				--surface-primary: rgba(36, 36, 38, 0.78);
+				--surface-card: rgba(46, 46, 48, 0.72);
+				--surface-overlay: rgba(58, 58, 60, 0.62);
+				--surface-muted: rgba(235, 235, 245, 0.08);
+				--border-soft: rgba(235, 235, 245, 0.15);
+				--border-strong: rgba(235, 235, 245, 0.22);
+				--code-surface: rgba(17, 24, 39, 0.85);
+				--widget-glow-primary: rgba(64, 156, 255, 0.68);
+				--widget-glow-secondary: rgba(10, 132, 255, 0.45);
+				--widget-glow-tertiary: rgba(13, 13, 25, 0.82);
+				--widget-glow-highlight: rgba(125, 205, 255, 0.6);
+			}
+
+			/* Accessibility: focus-visible outlines */
+			:focus { outline: none; }
+			:focus-visible { outline: 2px solid var(--brand-color); outline-offset: 2px; }
+			.btn:focus-visible, .tab-btn:focus-visible, .theme-toggle:focus-visible, .copy-btn:focus-visible, a:focus-visible, cap-widget:focus-visible {
+				box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+				border-color: var(--brand-color);
+			}
+
+			/* Reduced motion for users who prefer it */
+			@media (prefers-reduced-motion: reduce) {
+				*, *::before, *::after { animation: none !important; transition: none !important; }
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			
+			body {
+				font-family: 'SF Pro Text', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				line-height: 1.65;
+				letter-spacing: -0.01em;
+				color: var(--text-primary);
+				background: var(--bg-secondary);
+				overflow-x: hidden;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			html { scroll-behavior: smooth; }
+
+			/* Animated background */
+			.bg-animated {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+				background: var(--primary-gradient);
+				opacity: 0;
+				display: none;
+			}
+
+			.bg-animated::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 200%;
+				height: 200%;
+				background: 
+					radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+					radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+				animation: float 20s ease-in-out infinite;
+			}
+
+			@keyframes float {
+				0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+				50% { transform: translate(-30%, -60%) rotate(180deg); }
+			}
+
+			@keyframes glowDrift {
+				0% { transform: translate3d(-18%, -14%, 0) scale(0.95); opacity: 0.65; }
+				50% { transform: translate3d(12%, 10%, 0) scale(1.05); opacity: 0.9; }
+				100% { transform: translate3d(-8%, 16%, 0) scale(0.98); opacity: 0.7; }
+			}
+
+			@keyframes glowPulse {
+				0% { transform: scale(0.9) rotate(0deg); opacity: 0.35; }
+				50% { transform: scale(1.08) rotate(180deg); opacity: 0.6; }
+				100% { transform: scale(0.92) rotate(360deg); opacity: 0.35; }
+			}
+
+			@keyframes glowSweep {
+				0% { background-position: 0% 35%, 60% 20%, 50% 50%; }
+				50% { background-position: 90% 62%, 28% 82%, 48% 60%; }
+				100% { background-position: 0% 35%, 60% 20%, 50% 50%; }
+			}
+			
+			.container {
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 0 20px;
+				position: relative;
+			}
+
+			/* Modern sticky navbar */
+			.navbar {
+				position: sticky;
+				top: 0;
+				z-index: 100;
+				background: rgba(255, 255, 255, 0.85);
+				backdrop-filter: saturate(180%) blur(24px);
+				border-bottom: 1px solid var(--border-light);
+			}
+			[data-theme="dark"] .navbar {
+				background: rgba(22, 22, 24, 0.8);
+				backdrop-filter: saturate(200%) blur(26px);
+			}
+
+			.navbar-inner {
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 12px 20px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.brand {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				font-weight: 600;
+				color: var(--text-primary);
+				letter-spacing: -0.03em;
+			}
+
+			.brand-badge {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 28px;
+				height: 28px;
+				border-radius: 9px;
+				background: var(--accent-soft);
+				color: var(--brand-color);
+				box-shadow: none;
+				font-size: 0.95rem;
+				font-weight: 600;
+			}
+
+			.theme-toggle {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 36px;
+				height: 36px;
+				border-radius: 10px;
+				border: 1px solid var(--border-light);
+				background: transparent;
+				color: var(--text-secondary);
+				cursor: pointer;
+				transition: background 0.2s ease, color 0.2s ease;
+			}
+			.theme-toggle:hover {
+				background: var(--accent-soft);
+				color: var(--brand-color);
+			}
+
+			/* Navbar actions */
+			.nav-actions {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.icon-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 36px;
+				height: 36px;
+				border: 1px solid var(--border-light);
+				background: transparent;
+				color: var(--text-secondary);
+				border-radius: 10px;
+				transition: background 0.2s ease, color 0.2s ease;
+			}
+			.icon-btn:hover {
+				background: var(--accent-soft);
+				color: var(--brand-color);
+			}
+			.icon-btn svg { width: 18px; height: 18px; display: block; }
+			
+			.header {
+				text-align: center;
+				padding: 96px 0 64px;
+				position: relative;
+			}
+
+			.header::before {
+				content: none;
+			}
+			
+			.header h1 {
+				font-size: 3.25rem;
+				font-weight: 600;
+				margin-bottom: 18px;
+				color: var(--text-primary);
+				letter-spacing: -0.04em;
+				line-height: 1.1;
+			}
+			
+			.header p {
+				font-size: 1.2rem;
+				color: var(--text-secondary);
+				font-weight: 400;
+				max-width: 640px;
+				margin: 0 auto;
+			}
+
+			/* CTA buttons */
+			.cta-group {
+				margin-top: 32px;
+				display: inline-flex;
+				gap: 16px;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 14px 24px;
+				border-radius: 14px;
+				font-weight: 600;
+				font-size: 0.95rem;
+				cursor: pointer;
+				border: 1px solid var(--border-soft);
+				background: var(--surface-overlay);
+				color: var(--text-primary);
+				transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+				text-decoration: none;
+			}
+			.btn:hover {
+				box-shadow: var(--shadow-sm);
+				background: var(--surface-card);
+			}
+			.btn.primary {
+				background: var(--brand-color);
+				color: #fff;
+				border-color: transparent;
+				box-shadow: none;
+			}
+			.btn.primary:hover {
+				background: #0a84ff;
+				box-shadow: 0 20px 30px -18px rgba(0, 113, 227, 0.45);
+			}
+			.btn.ghost {
+				background: transparent;
+				color: var(--text-primary);
+			}
+			.btn.ghost:hover {
+				background: var(--accent-soft);
+				color: var(--brand-color);
+			}
+
+			.content {
+				background: var(--surface-primary);
+				border-radius: 32px;
+				box-shadow: var(--shadow-md);
+				overflow: hidden;
+				margin-bottom: 48px;
+				border: 1px solid var(--border-soft);
+			}
+			
+			.section {
+				padding: 56px 64px;
+				position: relative;
+			}
+			
+			.section:not(:last-child) {
+				border-bottom: 1px solid var(--border-soft);
+			}
+
+			.section::before {
+				content: none;
+			}
+			
+			.section h2 {
+				color: var(--text-primary);
+				margin-bottom: 28px;
+				font-size: 2.2rem;
+				font-weight: 600;
+				letter-spacing: -0.02em;
+			}
+			
+			.section h2::before {
+				content: none;
+			}
+
+			.section p {
+				color: var(--text-secondary);
+				font-size: 1.05rem;
+				line-height: 1.75;
+				margin-bottom: 24px;
+			}
+			
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 32px;
+				margin-top: 36px;
+			}
+			
+			.feature-card {
+				background: var(--surface-card);
+				padding: 36px 32px;
+				border-radius: 28px;
+				border: 1px solid var(--border-soft);
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+				position: relative;
+			}
+
+			.feature-card::before {
+				content: none;
+			}
+
+			.feature-card:hover {
+				transform: translateY(-6px);
+				box-shadow: var(--shadow-sm);
+			}
+			
+			.feature-card h3 {
+				color: var(--text-primary);
+				margin-bottom: 14px;
+				font-size: 1.3rem;
+				font-weight: 600;
+				letter-spacing: -0.01em;
+			}
+
+			.feature-card h3::before { content: none; }
+
+			.feature-card p {
+				color: var(--text-secondary);
+				font-size: 1rem;
+				line-height: 1.6;
+				margin: 0;
+			}
+			
+			.api-endpoint {
+				background: var(--surface-card);
+				border-radius: 28px;
+				padding: 36px 32px;
+				margin-bottom: 32px;
+				border: 1px solid var(--border-soft);
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+			}
+
+			.api-endpoint::before {
+				content: none;
+			}
+
+			.api-endpoint:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--shadow-sm);
+			}
+			
+			.method {
+				display: inline-flex;
+				align-items: center;
+				background: var(--accent-soft);
+				color: var(--brand-color);
+				padding: 6px 16px;
+				border-radius: 999px;
+				font-size: 0.85rem;
+				font-weight: 600;
+				margin-right: 12px;
+				letter-spacing: 0.08em;
+				box-shadow: none;
+			}
+			
+			.endpoint-url {
+				font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+				background: var(--surface-muted);
+				color: var(--text-primary);
+				padding: 6px 14px;
+				border-radius: 999px;
+				font-size: 0.95rem;
+				font-weight: 500;
+				border: 1px solid var(--border-soft);
+			}
+			
+			.code-block {
+				background: var(--code-surface);
+				color: var(--text-primary);
+				padding: 22px 24px;
+				border-radius: 18px;
+				font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+				font-size: 0.92rem;
+				line-height: 1.65;
+				overflow-x: auto;
+				margin: 20px 0;
+				border: 1px solid var(--code-border);
+				position: relative;
+			}
+
+			/* Copy button on code blocks */
+			.copy-btn {
+				position: absolute;
+				top: 12px;
+				right: 12px;
+				padding: 6px 12px;
+				font-size: 0.8rem;
+				border-radius: 999px;
+				border: 1px solid var(--border-soft);
+				background: var(--surface-overlay);
+				color: var(--text-secondary);
+				cursor: pointer;
+				transition: background 0.2s ease, color 0.2s ease;
+			}
+			.copy-btn:hover {
+				background: var(--accent-soft);
+				color: var(--brand-color);
+			}
+
+			.code-block::before {
+				content: none;
+			}
+
+			/* Code syntax highlighting */
+			.code-block .string { color: #0b84ff; }
+			.code-block .number { color: #ff9f0a; }
+			.code-block .boolean { color: #bf5af2; }
+			.code-block .null { color: #ff453a; }
+			.code-block .key { color: #6e6ef8; }
+			
+			.params {
+				margin-top: 24px;
+				background: var(--surface-card);
+				padding: 22px 24px;
+				border-radius: 20px;
+				border: 1px solid var(--border-soft);
+			}
+
+			.params h4 {
+				color: var(--text-primary);
+				margin-bottom: 18px;
+				font-size: 1.05rem;
+				font-weight: 600;
+			}
+			
+			.param {
+				margin-bottom: 12px;
+				padding: 14px 18px;
+				background: var(--accent-soft);
+				border-radius: 14px;
+				border: 1px solid rgba(0, 113, 227, 0.18);
+			}
+			
+			.param-name {
+				font-weight: 600;
+				color: var(--text-primary);
+				font-family: 'SF Mono', 'Monaco', monospace;
+				font-size: 0.9rem;
+			}
+			
+			.param-type {
+				color: var(--text-muted);
+				font-style: italic;
+				font-size: 0.85rem;
+			}
+			
+			.status-badge {
+				display: inline-flex;
+				align-items: center;
+				background: var(--accent-soft);
+				color: var(--brand-color);
+				padding: 4px 14px;
+				border-radius: 999px;
+				font-size: 0.8rem;
+				font-weight: 500;
+				margin-left: 10px;
+			}
+
+			.usage-flow {
+				counter-reset: step-counter;
+			}
+
+			.usage-flow li {
+				counter-increment: step-counter;
+				margin-bottom: 18px;
+				padding: 20px 28px 20px 48px;
+				background: var(--surface-card);
+				border-radius: 24px;
+				border: 1px solid var(--border-soft);
+				position: relative;
+				list-style: none;
+			}
+
+			.usage-flow li::before {
+				content: counter(step-counter);
+				position: absolute;
+				left: 18px;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 26px;
+				height: 26px;
+				background: var(--accent-soft);
+				color: var(--brand-color);
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.8rem;
+				font-weight: 600;
+			}
+
+			.usage-flow li strong {
+				color: var(--text-primary);
+				font-weight: 600;
+			}
+
+			.usage-flow li code {
+				background: var(--surface-muted);
+				padding: 2px 8px;
+				border-radius: 6px;
+				font-family: 'SF Mono', monospace;
+				font-size: 0.85rem;
+				color: var(--text-primary);
+			}
+
+			/* Demo Section Styles */
+			.demo-container {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 28px;
+				margin-top: 36px;
+				height: 560px;
+			}
+
+			.demo-section, .integration-section {
+				background: var(--surface-card);
+				padding: 32px;
+				border-radius: 28px;
+				border: 1px solid var(--border-soft);
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				box-shadow: var(--shadow-sm);
+				overflow: hidden;
+			}
+
+			.feature-card,
+			.api-endpoint,
+			.demo-section,
+			.integration-section,
+			cap-widget { backdrop-filter: none; }
+
+			.demo-section h3, .integration-section h3 {
+				color: var(--text-primary);
+				margin-bottom: 24px;
+				font-size: 1.25rem;
+				font-weight: 600;
+				display: flex;
+				align-items: center;
+				flex-shrink: 0;
+				height: 32px;
+			}
+
+			.demo-widget {
+				text-align: center;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				overflow: hidden;
+			}
+			/* center the captcha widget */
+			.demo-widget-container {
+				flex: 1;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				width: 100%;
+			}
+			[data-theme="dark"] .demo-widget-container {
+				background: none;
+			}
+
+			.captcha-placeholder {
+				height: 220px;
+				background: var(--surface-card);
+				border: 1px dashed var(--border-soft);
+				border-radius: 24px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 20px;
+				transition: border-color 0.2s ease, background 0.2s ease;
+				flex-shrink: 0;
+			}
+
+			.captcha-placeholder:hover {
+				border-color: var(--brand-color);
+				background: var(--accent-soft);
+			}
+
+			.captcha-loading {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+				color: var(--text-muted);
+			}
+
+			.loading-spinner {
+				width: 32px;
+				height: 32px;
+				border: 3px solid rgba(0, 113, 227, 0.2);
+				border-top-color: var(--brand-color);
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+				background: transparent;
+			}
+
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+
+			/* Loading spinner animation */
+			.demo-status {
+				background: var(--surface-overlay);
+				padding: 16px 20px;
+				border-radius: 18px;
+				border: 1px solid var(--border-soft);
+				margin-top: auto;
+				flex-shrink: 0;
+				height: 56px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.status-message {
+				color: var(--text-secondary);
+				font-size: 0.95rem;
+				text-align: center;
+				margin: 0;
+			}
+
+			.status-success {
+				color: var(--success-color);
+				font-weight: 500;
+			}
+
+			.status-error {
+				color: var(--error-color);
+				font-weight: 500;
+			}
+
+			/* Code Tabs */
+			.code-tabs {
+				border-radius: 24px;
+				overflow: hidden;
+				border: 1px solid var(--border-soft);
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				height: 0;
+				min-height: 0;
+				background: var(--surface-card);
+			}
+
+			.tab-buttons {
+				display: flex;
+				background: var(--surface-muted);
+				border-bottom: 1px solid var(--border-soft);
+				flex-shrink: 0;
+				height: 48px;
+			}
+
+			.tab-btn {
+				flex: 1;
+				padding: 12px 16px;
+				background: none;
+				border: none;
+				color: var(--text-secondary);
+				font-size: 0.9rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: color 0.2s ease, background 0.2s ease;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tab-btn:hover {
+				color: var(--brand-color);
+			}
+
+			.tab-btn.active {
+				background: var(--surface-overlay);
+				color: var(--text-primary);
+				font-weight: 600;
+			}
+
+			.tab-btn.active::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 28px;
+				right: 28px;
+				height: 3px;
+				border-radius: 999px;
+				background: var(--brand-color);
+			}
+
+			.tab-content {
+				display: none;
+				background: var(--surface-card);
+				flex: 1;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.tab-content.active {
+				display: block;
+			}
+
+			.tab-content .code-block {
+				margin: 0;
+				border-radius: 0;
+				border: none;
+				height: 100%;
+				overflow: auto;
+				white-space: pre;
+				display: block;
+				padding: 24px 28px;
+				line-height: 1.6;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: transparent;
+				box-shadow: none;
+			}
+
+			/* Integration Features */
+			.integration-features {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 14px;
+				margin-top: 36px;
+				justify-content: center;
+			}
+
+			.feature-pill {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				background: var(--surface-muted);
+				padding: 10px 18px;
+				border-radius: 999px;
+				border: 1px solid var(--border-soft);
+				font-size: 0.9rem;
+				color: var(--text-secondary);
+				font-weight: 500;
+				transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+			}
+
+			.feature-pill:hover {
+				background: var(--accent-soft);
+				border-color: transparent;
+				color: var(--brand-color);
+			}
+
+			.pill-icon { display: none; }
+
+			.feature-pill:hover .pill-icon {
+				transform: scale(1.1);
+			}
+
+			/* CAPTCHA Widget Styles */
+			cap-widget {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: calc(100% - 30px);
+				width: 100%;
+				border: 1px solid var(--border-soft);
+				border-radius: 24px;
+				padding: 18px;
+				background:
+					radial-gradient(circle at 12% 18%, rgba(0, 113, 227, 0.18), transparent 55%),
+					radial-gradient(circle at 85% 88%, rgba(90, 200, 250, 0.22), transparent 62%),
+					linear-gradient(140deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.55) 40%, rgba(206, 221, 255, 0.25) 100%);
+				background-size: 220% 220%, 200% 200%, 160% 160%;
+				background-position: 0% 35%, 60% 20%, 50% 50%;
+				animation: glowSweep 20s ease-in-out infinite;
+				margin-bottom: 20px;
+				transition: border-color 0.25s ease, box-shadow 0.3s ease;
+				position: relative;
+				overflow: hidden;
+				isolation: isolate;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+				background-blend-mode: screen, screen, normal;
+			}
+
+			cap-widget::before,
+			cap-widget::after {
+				content: '';
+				position: absolute;
+				inset: -38%;
+				opacity: 0.85;
+				pointer-events: none;
+				z-index: 0;
+				border-radius: 50%;
+			}
+
+			cap-widget::before {
+				filter: blur(80px) saturate(140%);
+				background:
+					radial-gradient(circle at 32% 28%, var(--widget-glow-primary) 0%, transparent 60%),
+					radial-gradient(circle at 72% 68%, var(--widget-glow-secondary) 0%, transparent 62%);
+				mix-blend-mode: screen;
+				animation: glowDrift 22s ease-in-out infinite;
+			}
+
+			cap-widget::after {
+				filter: blur(55px);
+				background:
+					radial-gradient(circle at 50% 50%, var(--widget-glow-highlight) 0%, transparent 60%),
+					conic-gradient(from 0deg at 50% 50%, transparent 0deg, var(--widget-glow-tertiary) 120deg, transparent 240deg, var(--widget-glow-secondary) 310deg);
+				mix-blend-mode: color-dodge;
+				animation: glowPulse 14s ease-in-out infinite alternate;
+			}
+
+			[data-theme="dark"] cap-widget {
+				background:
+					radial-gradient(circle at 18% 20%, rgba(64, 156, 255, 0.28), transparent 60%),
+					radial-gradient(circle at 82% 78%, rgba(10, 132, 255, 0.32), transparent 65%),
+					linear-gradient(150deg, rgba(32, 32, 40, 0.95) 0%, rgba(12, 16, 24, 0.72) 38%, rgba(9, 11, 19, 0.9) 100%);
+				background-size: 220% 220%, 200% 200%, 160% 160%;
+				background-position: 0% 35%, 60% 20%, 50% 50%;
+				background-blend-mode: screen, screen, normal;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+			}
+
+			cap-widget > * {
+				position: relative;
+				z-index: 1;
+			}
+
+			cap-widget:hover {
+				border-color: var(--brand-color);
+			}
+
+			cap-widget:hover::after {
+				opacity: 0.95;
+				filter: blur(48px);
+			}
+
+			.error-list {
+				list-style: none;
+				margin-top: 20px;
+			}
+
+			.error-list li {
+				padding: 14px 18px;
+				margin-bottom: 10px;
+				background: var(--surface-card);
+				border-radius: 18px;
+				border: 1px solid rgba(255, 69, 58, 0.28);
+				transition: border-color 0.2s ease, background 0.2s ease;
+			}
+
+			.error-list li:hover {
+				background: rgba(255, 69, 58, 0.12);
+				border-color: rgba(255, 69, 58, 0.35);
+			}
+
+			.error-list strong {
+				color: var(--error-color);
+				font-weight: 600;
+			}
+			
+			.footer {
+				text-align: center;
+				color: var(--text-muted);
+				margin: 60px 0 40px;
+				font-size: 1rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+			}
+
+			.footer::before { content: ''; }
+
+			/* Scroll indicator */
+			.scroll-indicator {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 3px;
+				background: var(--surface-muted);
+				z-index: 1000;
+			}
+
+			.scroll-progress {
+				height: 100%;
+				background: var(--brand-color);
+				transition: width 0.15s ease;
+			}
+			
+			@media (max-width: 768px) {
+				.header {
+					padding: 72px 0 48px;
+				}
+				
+				.header h1 {
+					font-size: 2.6rem;
+				}
+
+				.header p {
+					font-size: 1.1rem;
+					padding: 0 12px;
+				}
+				
+				.section {
+					padding: 36px 28px;
+				}
+
+				.section h2 {
+					font-size: 1.65rem;
+				}
+
+				.feature-grid {
+					grid-template-columns: 1fr;
+					gap: 20px;
+				}
+
+				.api-endpoint {
+					padding: 28px;
+				}
+
+				.code-block {
+					padding: 18px;
+					font-size: 0.85rem;
+				}
+
+				/* Demo responsive styles */
+				.demo-container {
+					grid-template-columns: 1fr;
+					gap: 24px;
+					height: auto;
+				}
+
+				.demo-section, .integration-section {
+					padding: 24px;
+					height: auto;
+					min-height: 420px;
+				}
+
+				.captcha-placeholder {
+					height: 160px;
+				}
+
+				.demo-status {
+					height: auto;
+					min-height: 48px;
+				}
+
+				.integration-features {
+					gap: 12px;
+					margin-top: 28px;
+				}
+
+				.feature-pill {
+					font-size: 0.88rem;
+					padding: 8px 14px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.container {
+					padding: 0 16px;
+				}
+
+				.header h1 {
+					font-size: 2.15rem;
+				}
+
+				.section {
+					padding: 28px 22px;
+				}
+
+				.demo-section, .integration-section {
+					padding: 20px;
+					min-height: auto;
+				}
+
+				.tab-btn {
+					padding: 10px 12px;
+					font-size: 0.84rem;
+				}
+
+				.captcha-placeholder {
+					min-height: 130px;
+				}
+			}
+		</style>
+		<script src="https://captcha.gurl.eu.org/cap.min.js"></script>
+	</head>
+	<body>
+		<div class="bg-animated"></div>
+		<div class="scroll-indicator">
+			<div class="scroll-progress" id="scrollProgress"></div>
+		</div>
+		
+		<!-- Modern Navbar -->
+		<nav class="navbar">
+			<div class="navbar-inner">
+				<div class="brand">
+					<span class="brand-badge">C</span>
+					<span>CAP Worker</span>
+				</div>
+				<div class="nav-actions">
+					<a class="icon-btn" href="https://github.com/xyTom/cap-worker" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.51 2.87 8.33 6.85 9.69.5.09.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.13-4.56-5.04 0-1.11.39-2.01 1.03-2.72-.1-.26-.45-1.3.1-2.71 0 0 .85-.28 2.78 1.04A9.36 9.36 0 0112 6.84c.86 0 1.73.12 2.54.34 1.93-1.32 2.78-1.04 2.78-1.04.55 1.41.2 2.45.1 2.71.64.71 1.03 1.61 1.03 2.72 0 3.92-2.34 4.77-4.57 5.03.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.86 0 .27.18.58.69.48A10.05 10.05 0 0022 12.26C22 6.58 17.52 2 12 2z"/></svg>
+					</a>
+					<button id="themeToggle" class="theme-toggle icon-btn" aria-label="Toggle theme"></button>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="header">
+				<h1>CAP Worker Service</h1>
+				<p>Next-generation CAPTCHA service powered by Cloudflare Workers for global scale and performance</p>
+				<div class="cta-group">
+					<a href="#integration" class="btn primary">Get Started</a>
+					<a href="#api" class="btn ghost">API Reference</a>
+				</div>
+			</div>
+			
+			<div class="content">
+				<div class="section" id="integration">
+					<h2>Live Demo & Integration</h2>
+					<p>Experience CAP Worker in action and see how easy it is to integrate into your applications with just a few lines of code.</p>
+					
+					<div class="demo-container">
+						<div class="demo-section">
+							<h3>Interactive Demo</h3>
+							<div class="demo-widget">
+								<div class="demo-widget-container">
+									<cap-widget id="cap" data-cap-api-endpoint="https://captcha.gurl.eu.org/api/"></cap-widget>
+								</div>
+								<div class="demo-status" id="demoStatus">
+									<div class="status-message">Complete the CAPTCHA above to see it in action</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="integration-section">
+							<h3>Quick Integration</h3>
+							<div class="code-tabs">
+								<div class="tab-buttons">
+									<button class="tab-btn active" data-tab="html">HTML</button>
+									<button class="tab-btn" data-tab="javascript">JavaScript</button>
+									<button class="tab-btn" data-tab="validation">Validation</button>
+								</div>
+								
+								<div class="tab-content active" data-tab="html">
+									<div class="code-block"><!-- <span class="key">Step 1:</span> Add the script -->
+&lt;<span class="key">script</span> <span class="key">src</span>=<span class="string">"https://captcha.gurl.eu.org/cap.min.js"</span>&gt;&lt;/<span class="key">script</span>&gt;
+
+<!-- <span class="key">Step 2:</span> Add the widget -->
+&lt;<span class="key">cap-widget</span> 
+  <span class="key">id</span>=<span class="string">"cap"</span> 
+  <span class="key">data-cap-api-endpoint</span>=<span class="string">"https://captcha.gurl.eu.org/api/"</span>&gt;
+&lt;/<span class="key">cap-widget</span>&gt;</div>
+								</div>
+								
+								<div class="tab-content" data-tab="javascript">
+									<div class="code-block"><span class="key">const</span> widget = document.querySelector(<span class="string">"#cap"</span>);
+
+widget.addEventListener(<span class="string">"solve"</span>, <span class="key">async function</span> (e) {
+  <span class="key">const</span> token = e.detail.token;
+  
+  <span class="key">// Handle the token as needed</span>
+  console.log(<span class="string">"CAPTCHA solved, token:"</span>, token);
+  
+  <span class="key">// Validate the token server-side</span>
+  <span class="key">const</span> result = <span class="key">await</span> fetch(<span class="string">'https://captcha.gurl.eu.org/api/validate'</span>, {
+    method: <span class="string">'POST'</span>,
+    headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+    body: JSON.stringify({ 
+      token: token, 
+      keepToken: <span class="boolean">false</span> 
+    })
+  });
+  
+  <span class="key">const</span> validation = <span class="key">await</span> result.json();
+  console.log(<span class="string">"Validation result:"</span>, validation);
+});</div>
+								</div>
+								
+								<div class="tab-content" data-tab="validation">
+									<div class="code-block"><span class="key">// Server-side validation example (Node.js)</span>
+<span class="key">app.post</span>(<span class="string">'/protected-endpoint'</span>, <span class="key">async</span> (req, res) => {
+  <span class="key">const</span> { captchaToken } = req.body;
+  
+  <span class="key">try</span> {
+    <span class="key">const</span> validation = <span class="key">await</span> fetch(<span class="string">'https://captcha.gurl.eu.org/api/validate'</span>, {
+      method: <span class="string">'POST'</span>,
+      headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+      body: JSON.stringify({ 
+        token: captchaToken,
+        keepToken: <span class="boolean">false</span>
+      })
+    });
+    
+    <span class="key">const</span> result = <span class="key">await</span> validation.json();
+    
+    <span class="key">if</span> (result.success) {
+      <span class="key">// CAPTCHA verified, proceed with protected operation</span>
+      res.json({ message: <span class="string">'Access granted'</span> });
+    } <span class="key">else</span> {
+      res.status(<span class="number">400</span>).json({ error: <span class="string">'CAPTCHA verification failed'</span> });
+    }
+  } <span class="key">catch</span> (error) {
+    res.status(<span class="number">500</span>).json({ error: <span class="string">'Validation error'</span> });
+  }
+});</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="integration-features">
+						<div class="feature-pill">
+							<span class="pill-icon">⚡</span>
+							<span>5-minute setup</span>
+						</div>
+						<div class="feature-pill">
+							<span class="pill-icon">📱</span>
+							<span>Private First</span>
+						</div>
+						<div class="feature-pill">
+							<span class="pill-icon">🌍</span>
+							<span>Global CDN</span>
+						</div>
+					</div>
+				</div>
+				
+				<div class="section">
+					<h2>Service Overview</h2>
+					<p>CAP Worker delivers enterprise-grade bot protection through an intelligent, globally distributed CAPTCHA system. Built on Cloudflare's edge infrastructure, it provides millisecond response times and 99.99% uptime.</p>
+					
+					<div class="feature-grid">
+						<div class="feature-card">
+							<h3 data-icon="🚀">Ultra Performance</h3>
+							<p>Edge-deployed across 250+ cities worldwide with sub-100ms response times and automatic scaling</p>
+						</div>
+						<div class="feature-card">
+							<h3 data-icon="🔒">Enterprise Security</h3>
+							<p>Military-grade encryption with advanced bot detection algorithms and fraud prevention</p>
+						</div>
+						<div class="feature-card">
+							<h3 data-icon="🎯">Developer First</h3>
+							<p>RESTful API design with comprehensive SDKs for all major programming languages</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="section" id="api">
+					<h2>API Reference</h2>
+					<p>Complete API documentation with examples and best practices. All endpoints support JSON and return structured responses.</p>
+					
+					<div class="api-endpoint">
+						<h3>
+							<span class="method">POST</span>
+							<span class="endpoint-url">/api/challenge</span>
+							<span class="status-badge">Generate Challenge</span>
+						</h3>
+						<p>Creates a new CAPTCHA challenge with cryptographically secure tokens and returns challenge data for client rendering.</p>
+						
+						<h4>Request Example:</h4>
+						<div class="code-block">fetch('<span class="string">/api/challenge</span>', {
+  method: '<span class="string">POST</span>',
+  headers: {
+    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+  }
+})</div>
+						
+						<h4>Response Example:</h4>
+						<div class="code-block">{
+  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39ed75e6e4cc152436cc0d94363de6</span>",
+  "<span class="key">challenge</span>": "<span class="string">{ "c": 50, "s": 32, "d": 4 }</span>",
+  "<span class="key">expires</span>": <span class="number">1753924498818</span>
+}</div>
+					</div>
+					
+					<div class="api-endpoint">
+						<h3>
+							<span class="method">POST</span>
+							<span class="endpoint-url">/api/redeem</span>
+							<span class="status-badge">Verify Solution</span>
+						</h3>
+						<p>Validates user-submitted CAPTCHA solution and returns verification token for subsequent API calls.</p>
+						
+						<div class="params">
+							<h4>Request Parameters:</h4>
+							<div class="param">
+								<span class="param-name">token</span> 
+								<span class="param-type">(string, required)</span> - Challenge token from /api/challenge
+							</div>
+							<div class="param">
+								<span class="param-name">solutions</span> 
+								<span class="param-type">(number[], required)</span> - Array of user solution indices
+							</div>
+						</div>
+						
+						<h4>Request Example:</h4>
+						<div class="code-block">fetch('<span class="string">/api/redeem</span>', {
+  method: '<span class="string">POST</span>',
+  headers: {
+    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+  },
+  body: JSON.stringify({
+    <span class="key">token</span>: '<span class="string">c6bd7fd0bea728b5405f0e3637dca6d1b88aaf33589809a103</span>',
+    <span class="key">solutions</span>: [<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>]
+  })
+})</div>
+						
+						<h4>Response Example:</h4>
+						<div class="code-block">{
+  "<span class="key">success</span>": <span class="boolean">true</span>,
+  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>",
+}</div>
+					</div>
+					
+					<div class="api-endpoint">
+						<h3>
+							<span class="method">POST</span>
+							<span class="endpoint-url">/api/validate</span>
+							<span class="status-badge">Token Validation</span>
+						</h3>
+						<p>Validates previously issued tokens and optionally consumes them for one-time use scenarios.</p>
+						
+						<div class="params">
+							<h4>Request Parameters:</h4>
+							<div class="param">
+								<span class="param-name">token</span> 
+								<span class="param-type">(string, required)</span> - Verification token to validate
+							</div>
+							<div class="param">
+								<span class="param-name">keepToken</span> 
+								<span class="param-type">(boolean, optional)</span> - Preserve token for reuse (default: false)
+							</div>
+						</div>
+						
+						<h4>Request Example:</h4>
+						<div class="code-block">fetch('<span class="string">/api/validate</span>', {
+  method: '<span class="string">POST</span>',
+  headers: {
+    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+  },
+  body: JSON.stringify({
+    <span class="key">token</span>: '<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>',
+    <span class="key">keepToken</span>: <span class="boolean">false</span>
+  })
+})</div>
+						
+						<h4>Response Example:</h4>
+						<div class="code-block">{
+  "<span class="key">success</span>": <span class="boolean">true</span>
+}</div>
+					</div>
+				</div>
+				
+				<div class="section">
+					<h2>Integration Guide</h2>
+					<ol class="usage-flow">
+						<li><strong>Generate Challenge</strong>: Request a new CAPTCHA via <code>/api/challenge</code> endpoint</li>
+						<li><strong>Render UI</strong>: Display the challenge content in your frontend using our SDK or custom implementation</li>
+						<li><strong>Collect Solution</strong>: Capture user interaction and prepare solution array</li>
+						<li><strong>Verify Response</strong>: Submit solution via <code>/api/redeem</code> for server-side validation</li>
+						<li><strong>Token Usage</strong>: Use returned token for protected operations via <code>/api/validate</code></li>
+					</ol>
+				</div>
+				<div class="section">
+					<h2>Error Handling</h2>
+					<p>Our API follows REST conventions with detailed error responses and appropriate HTTP status codes:</p>
+					<ul class="error-list">
+						<li><strong>400 Bad Request</strong>: Malformed request body or missing required parameters</li>
+						<li><strong>401 Unauthorized</strong>: Invalid or expired authentication credentials</li>
+						<li><strong>404 Not Found</strong>: Requested endpoint or resource doesn't exist</li>
+						<li><strong>429 Too Many Requests</strong>: Rate limit exceeded, retry with exponential backoff</li>
+						<li><strong>500 Internal Server Error</strong>: Temporary server issue, safe to retry</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="footer">
+				Powered by Cloudflare Workers & @cap.js/server
+			</div>
+		</div>
+
+		<script>
+			// Theme initialization before other scripts
+			(function() {
+				try {
+					const storedTheme = localStorage.getItem('theme');
+					const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+					document.body.setAttribute('data-theme', theme);
+				} catch (_) {}
+			})();
+
+			// Scroll progress indicator
+			window.addEventListener('scroll', () => {
+				const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+				document.getElementById('scrollProgress').style.width = scrolled + '%';
+			});
+
+			// Add hover effects to code blocks
+			document.querySelectorAll('.code-block').forEach(block => {
+				block.addEventListener('mouseenter', () => {
+					block.style.boxShadow = '0 24px 48px rgba(15, 23, 42, 0.12)';
+				});
+				
+				block.addEventListener('mouseleave', () => {
+					block.style.boxShadow = 'none';
+				});
+			});
+
+			// CAPTCHA Demo Initialization
+			document.addEventListener('DOMContentLoaded', function() {
+				const widget = document.querySelector("#cap");
+				
+				// Theme toggle action
+				const toggle = document.getElementById('themeToggle');
+				if (toggle) {
+					const SUN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+					const MOON_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+					const setIcon = () => {
+						const isDark = document.body.getAttribute('data-theme') === 'dark';
+						toggle.innerHTML = isDark ? MOON_ICON : SUN_ICON;
+						toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+					};
+					setIcon();
+					toggle.addEventListener('click', () => {
+						const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+						document.body.setAttribute('data-theme', next);
+						try { localStorage.setItem('theme', next); } catch (_) {}
+						setIcon();
+					});
+				}
+
+				// Copy buttons for code blocks
+				document.querySelectorAll('.code-block').forEach(block => {
+					if (!block.dataset.code) {
+						block.dataset.code = block.innerText;
+						const btn = document.createElement('button');
+						btn.className = 'copy-btn';
+						btn.type = 'button';
+						btn.textContent = 'Copy';
+						btn.addEventListener('click', async () => {
+							try {
+								await navigator.clipboard.writeText(block.dataset.code || '');
+								btn.textContent = 'Copied';
+								setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+							} catch (err) {
+								btn.textContent = 'Failed';
+								setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+							}
+						});
+						block.appendChild(btn);
+					}
+				});
+
+				if (widget) {
+					widget.addEventListener("solve", async function (e) {
+						const token = e.detail.token;
+						console.log('CAPTCHA solved, token:', token);
+
+						try {
+							const result = await fetch('https://captcha.gurl.eu.org/api/validate', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({
+									token: token,
+									keepToken: false
+								})
+							});
+							const validation = await result.json();
+							console.log('Validation result:', validation);
+
+							if (validation.success) {
+								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-success">✅ CAPTCHA verified successfully!</div>';
+							} else {
+								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ CAPTCHA verification failed.</div>';
+							}
+						} catch (error) {
+							console.error('Validation error:', error);
+							document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ Validation error occurred.</div>';
+						}
+					});
+
+					widget.addEventListener("error", function (e) {
+						console.error('CAPTCHA error:', e.detail);
+						document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ CAPTCHA loading error.</div>';
+					});
+				}
+			});
+
+			// Tab switching functionality
+			document.querySelectorAll('.tab-btn').forEach(button => {
+				button.addEventListener('click', () => {
+					const targetTab = button.dataset.tab;
+					document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+					document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+					button.classList.add('active');
+					document.querySelector(`.tab-content[data-tab="${targetTab}"]`).classList.add('active');
+				});
+			});
+		</script>
+	</body>
+</html>
