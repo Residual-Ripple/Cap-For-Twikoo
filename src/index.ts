@@ -324,15 +324,15 @@ export default {
       }
     }
 
-		// === 在文件顶部，Env 接口中增加 CAP_SECRET_KEY ===
+		// 环境变量加入 secret key
 		interface Env {
 		  CAP_STORAGE: DurableObjectNamespace;
-		  CAP_SECRET_KEY: string; // Cloudflare Secrets 注入，不在 git 中
+		  CAP_SECRET_KEY: string;  // 新增：用于 siteverify 的密钥
 		}
 		
-		// === 在 fetch 函数中，/api/validate 路由后面（或任意合适位置）添加以下代码 ===
+		// 在 fetch 函数中，POST /api/validate 之后添加：
 		
-		// Route: POST /api/siteverify (兼容官方 Cap 的 siteverify 接口，供 Twikoo 后端调用)
+		// Route: POST /api/siteverify (兼容官方 Cap 的验证接口)
 		if (request.method === "POST" && url.pathname === "/api/siteverify") {
 		  let body: { secret?: string; response?: string };
 		  try {
@@ -356,7 +356,7 @@ export default {
 		      }
 		    );
 		  }
-		  // 验证 secret key（匹配 Cloudflare 中设置的 CAP_SECRET_KEY）
+		  // 验证 secret key
 		  if (secret !== env.CAP_SECRET_KEY) {
 		    return new Response(
 		      JSON.stringify({ success: false, error: "Invalid secret" }),
@@ -366,7 +366,7 @@ export default {
 		      }
 		    );
 		  }
-		  // 验证 token——复用已有的 validateAndConsumeToken 逻辑
+		  // 验证 token（使用已有的 validate 逻辑）
 		  const tokenHash = await hashToken(token);
 		  try {
 		    await storageStub.validateAndConsumeToken(tokenHash, false);
@@ -381,18 +381,12 @@ export default {
 		      else if (msg === "EXPIRED") status = 410;
 		      return new Response(
 		        JSON.stringify({ success: false, error: msg }),
-		        {
-		          status,
-		          headers: { "Content-Type": "application/json", ...CORS_HEADERS },
-		        }
+		        { status, headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
 		      );
 		    }
 		    return new Response(
 		      JSON.stringify({ success: false, error: "Token invalid" }),
-		      {
-		        status: 400,
-		        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
-		      }
+		      { status: 400, headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
 		    );
 		  }
 		}
