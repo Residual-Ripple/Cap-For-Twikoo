@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>CAP Worker Service</title>
+		<title>Cap-For-Twikoo - Cap 验证码服务</title>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 		<style>
 			:root {
@@ -92,7 +92,7 @@
 			}
 			
 			body {
-				font-family: 'SF Pro Text', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				font-family: 'SF Pro Text', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
 				line-height: 1.65;
 				letter-spacing: -0.01em;
 				color: var(--text-primary);
@@ -497,7 +497,6 @@
 				border-radius: 20px;
 				border: 1px solid var(--border-soft);
 			}
-
 			.params h4 {
 				color: var(--text-primary);
 				margin-bottom: 18px;
@@ -1071,7 +1070,7 @@
 				}
 			}
 		</style>
-		<script src="https://captcha.gurl.eu.org/cap.min.js"></script>
+		<script src="https://cft.yvyang.qzz.io/cap.min.js"></script>
 	</head>
 	<body>
 		<div class="bg-animated"></div>
@@ -1084,116 +1083,116 @@
 			<div class="navbar-inner">
 				<div class="brand">
 					<span class="brand-badge">C</span>
-					<span>CAP Worker</span>
+					<span>Cap-For-Twikoo</span>
 				</div>
 				<div class="nav-actions">
-					<a class="icon-btn" href="https://github.com/xyTom/cap-worker" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+					<a class="icon-btn" href="https://github.com/qwq-YvYang/Cap-For-Twikoo" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
 						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.51 2.87 8.33 6.85 9.69.5.09.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.13-4.56-5.04 0-1.11.39-2.01 1.03-2.72-.1-.26-.45-1.3.1-2.71 0 0 .85-.28 2.78 1.04A9.36 9.36 0 0112 6.84c.86 0 1.73.12 2.54.34 1.93-1.32 2.78-1.04 2.78-1.04.55 1.41.2 2.45.1 2.71.64.71 1.03 1.61 1.03 2.72 0 3.92-2.34 4.77-4.57 5.03.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.86 0 .27.18.58.69.48A10.05 10.05 0 0022 12.26C22 6.58 17.52 2 12 2z"/></svg>
 					</a>
-					<button id="themeToggle" class="theme-toggle icon-btn" aria-label="Toggle theme"></button>
+					<button id="themeToggle" class="theme-toggle icon-btn" aria-label="切换主题"></button>
 				</div>
 			</div>
 		</nav>
 		
 		<div class="container">
 			<div class="header">
-				<h1>CAP Worker Service</h1>
-				<p>Next-generation CAPTCHA service powered by Cloudflare Workers for global scale and performance</p>
+				<h1>Cap-For-Twikoo</h1>
+				<p>基于 Cloudflare Workers 的 Cap 验证码服务，为 Twikoo 评论系统提供无缝接入</p>
 				<div class="cta-group">
-					<a href="#integration" class="btn primary">Get Started</a>
-					<a href="#api" class="btn ghost">API Reference</a>
+					<a href="#integration" class="btn primary">开始使用</a>
+					<a href="#api" class="btn ghost">API 参考</a>
 				</div>
 			</div>
 			
 			<div class="content">
 				<div class="section" id="integration">
-					<h2>Live Demo & Integration</h2>
-					<p>Experience CAP Worker in action and see how easy it is to integrate into your applications with just a few lines of code.</p>
+					<h2>在线演示与集成</h2>
+					<p>体验 Cap-For-Twikoo 验证码的实际效果，只需几行代码即可轻松集成到您的应用中。</p>
 					
 					<div class="demo-container">
 						<div class="demo-section">
-							<h3>Interactive Demo</h3>
+							<h3>交互式演示</h3>
 							<div class="demo-widget">
 								<div class="demo-widget-container">
-									<cap-widget id="cap" data-cap-api-endpoint="https://captcha.gurl.eu.org/api/"></cap-widget>
+									<cap-widget id="cap" data-cap-api-endpoint="https://cft.yvyang.qzz.io/api/"></cap-widget>
 								</div>
 								<div class="demo-status" id="demoStatus">
-									<div class="status-message">Complete the CAPTCHA above to see it in action</div>
+									<div class="status-message">完成上方验证码以查看效果</div>
 								</div>
 							</div>
 						</div>
 						
 						<div class="integration-section">
-							<h3>Quick Integration</h3>
+							<h3>快速集成</h3>
 							<div class="code-tabs">
 								<div class="tab-buttons">
 									<button class="tab-btn active" data-tab="html">HTML</button>
 									<button class="tab-btn" data-tab="javascript">JavaScript</button>
-									<button class="tab-btn" data-tab="validation">Validation</button>
+									<button class="tab-btn" data-tab="validation">服务端验证</button>
 								</div>
 								
 								<div class="tab-content active" data-tab="html">
-									<div class="code-block"><!-- <span class="key">Step 1:</span> Add the script -->
-&lt;<span class="key">script</span> <span class="key">src</span>=<span class="string">"https://captcha.gurl.eu.org/cap.min.js"</span>&gt;&lt;/<span class="key">script</span>&gt;
-
-<!-- <span class="key">Step 2:</span> Add the widget -->
-&lt;<span class="key">cap-widget</span> 
-  <span class="key">id</span>=<span class="string">"cap"</span> 
-  <span class="key">data-cap-api-endpoint</span>=<span class="string">"https://captcha.gurl.eu.org/api/"</span>&gt;
-&lt;/<span class="key">cap-widget</span>&gt;</div>
+									<div class="code-block"><!-- <span class="key">步骤 1：</span>添加脚本 -->
+	&lt;<span class="key">script</span> <span class="key">src</span>=<span class="string">"https://cft.yvyang.qzz.io/cap.min.js"</span>&gt;&lt;/<span class="key">script</span>&gt;
+	
+	<!-- <span class="key">步骤 2：</span>添加组件 -->
+	&lt;<span class="key">cap-widget</span> 
+	  <span class="key">id</span>=<span class="string">"cap"</span> 
+	  <span class="key">data-cap-api-endpoint</span>=<span class="string">"https://cft.yvyang.qzz.io/api/"</span>&gt;
+	&lt;/<span class="key">cap-widget</span>&gt;</div>
 								</div>
 								
 								<div class="tab-content" data-tab="javascript">
 									<div class="code-block"><span class="key">const</span> widget = document.querySelector(<span class="string">"#cap"</span>);
 
-widget.addEventListener(<span class="string">"solve"</span>, <span class="key">async function</span> (e) {
-  <span class="key">const</span> token = e.detail.token;
-  
-  <span class="key">// Handle the token as needed</span>
-  console.log(<span class="string">"CAPTCHA solved, token:"</span>, token);
-  
-  <span class="key">// Validate the token server-side</span>
-  <span class="key">const</span> result = <span class="key">await</span> fetch(<span class="string">'https://captcha.gurl.eu.org/api/validate'</span>, {
-    method: <span class="string">'POST'</span>,
-    headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
-    body: JSON.stringify({ 
-      token: token, 
-      keepToken: <span class="boolean">false</span> 
-    })
-  });
-  
-  <span class="key">const</span> validation = <span class="key">await</span> result.json();
-  console.log(<span class="string">"Validation result:"</span>, validation);
-});</div>
+	widget.addEventListener(<span class="string">"solve"</span>, <span class="key">async function</span> (e) {
+	  <span class="key">const</span> token = e.detail.token;
+	  
+	  <span class="key">// 处理验证码 token</span>
+	  console.log(<span class="string">"验证码通过，token："</span>, token);
+	  
+	  <span class="key">// 服务端验证 token</span>
+	  <span class="key">const</span> result = <span class="key">await</span> fetch(<span class="string">'https://cft.yvyang.qzz.io/api/validate'</span>, {
+	    method: <span class="string">'POST'</span>,
+	    headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+	    body: JSON.stringify({ 
+	      token: token, 
+	      keepToken: <span class="boolean">false</span> 
+	    })
+	  });
+	  
+	  <span class="key">const</span> validation = <span class="key">await</span> result.json();
+	  console.log(<span class="string">"验证结果："</span>, validation);
+	});</div>
 								</div>
 								
 								<div class="tab-content" data-tab="validation">
-									<div class="code-block"><span class="key">// Server-side validation example (Node.js)</span>
-<span class="key">app.post</span>(<span class="string">'/protected-endpoint'</span>, <span class="key">async</span> (req, res) => {
-  <span class="key">const</span> { captchaToken } = req.body;
-  
-  <span class="key">try</span> {
-    <span class="key">const</span> validation = <span class="key">await</span> fetch(<span class="string">'https://captcha.gurl.eu.org/api/validate'</span>, {
-      method: <span class="string">'POST'</span>,
-      headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
-      body: JSON.stringify({ 
-        token: captchaToken,
-        keepToken: <span class="boolean">false</span>
-      })
-    });
-    
-    <span class="key">const</span> result = <span class="key">await</span> validation.json();
-    
-    <span class="key">if</span> (result.success) {
-      <span class="key">// CAPTCHA verified, proceed with protected operation</span>
-      res.json({ message: <span class="string">'Access granted'</span> });
-    } <span class="key">else</span> {
-      res.status(<span class="number">400</span>).json({ error: <span class="string">'CAPTCHA verification failed'</span> });
-    }
-  } <span class="key">catch</span> (error) {
-    res.status(<span class="number">500</span>).json({ error: <span class="string">'Validation error'</span> });
-  }
-});</div>
+									<div class="code-block"><span class="key">// 服务端验证示例（Node.js）</span>
+	<span class="key">app.post</span>(<span class="string">'/api/submit-comment'</span>, <span class="key">async</span> (req, res) => {
+	  <span class="key">const</span> { captchaToken } = req.body;
+	  
+	  <span class="key">try</span> {
+	    <span class="key">const</span> validation = <span class="key">await</span> fetch(<span class="string">'https://cft.yvyang.qzz.io/api/validate'</span>, {
+	      method: <span class="string">'POST'</span>,
+	      headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+	      body: JSON.stringify({ 
+	        token: captchaToken,
+	        keepToken: <span class="boolean">false</span>
+	      })
+	    });
+	    
+	    <span class="key">const</span> result = <span class="key">await</span> validation.json();
+	    
+	    <span class="key">if</span> (result.success) {
+	      <span class="key">// 验证通过，执行受保护操作</span>
+	      res.json({ message: <span class="string">'验证通过'</span> });
+	    } <span class="key">else</span> {
+	      res.status(<span class="number">400</span>).json({ error: <span class="string">'验证码验证失败'</span> });
+	    }
+	  } <span class="key">catch</span> (error) {
+	    res.status(<span class="number">500</span>).json({ error: <span class="string">'验证错误'</span> });
+	  }
+	});</div>
 								</div>
 							</div>
 						</div>
@@ -1201,171 +1200,242 @@ widget.addEventListener(<span class="string">"solve"</span>, <span class="key">a
 					
 					<div class="integration-features">
 						<div class="feature-pill">
-							<span class="pill-icon">⚡</span>
-							<span>5-minute setup</span>
+							<span>⚡ 5 分钟接入</span>
 						</div>
 						<div class="feature-pill">
-							<span class="pill-icon">📱</span>
-							<span>Private First</span>
+							<span>🛡️ Twikoo 开箱即用</span>
 						</div>
 						<div class="feature-pill">
-							<span class="pill-icon">🌍</span>
-							<span>Global CDN</span>
+							<span>🌍 全球 CDN</span>
+						</div>
+						<div class="feature-pill">
+							<span>🔐 隐私安全</span>
 						</div>
 					</div>
 				</div>
 				
 				<div class="section">
-					<h2>Service Overview</h2>
-					<p>CAP Worker delivers enterprise-grade bot protection through an intelligent, globally distributed CAPTCHA system. Built on Cloudflare's edge infrastructure, it provides millisecond response times and 99.99% uptime.</p>
+					<h2>服务概述</h2>
+					<p>Cap-For-Twikoo 提供企业级的机器人防护能力，基于 Cloudflare 边缘基础设施构建，毫秒级响应。特别针对 Twikoo 评论系统 v1.7.14+ 进行了适配，支持 Cap 官方验证接口规范。</p>
 					
 					<div class="feature-grid">
 						<div class="feature-card">
-							<h3 data-icon="🚀">Ultra Performance</h3>
-							<p>Edge-deployed across 250+ cities worldwide with sub-100ms response times and automatic scaling</p>
+							<h3 data-icon="🚀">超高性能</h3>
+							<p>全球 250+ 城市边缘部署，响应时间低于 100ms，支持自动扩缩容</p>
 						</div>
 						<div class="feature-card">
-							<h3 data-icon="🔒">Enterprise Security</h3>
-							<p>Military-grade encryption with advanced bot detection algorithms and fraud prevention</p>
+							<h3 data-icon="🛡️">Twikoo 兼容</h3>
+							<p>新增 <code>/api/siteverify</code> 端点，完全兼容 Cap 官方验证规范，Twikoo 1.7.14+ 开箱即用</p>
 						</div>
 						<div class="feature-card">
-							<h3 data-icon="🎯">Developer First</h3>
-							<p>RESTful API design with comprehensive SDKs for all major programming languages</p>
+							<h3 data-icon="🔒">安全加密</h3>
+							<p><code>CAP_SECRET_KEY</code> 通过 Cloudflare Secrets 加密存储，不会泄露在代码仓库中</p>
 						</div>
 					</div>
 				</div>
 				
 				<div class="section" id="api">
-					<h2>API Reference</h2>
-					<p>Complete API documentation with examples and best practices. All endpoints support JSON and return structured responses.</p>
+					<h2>API 参考</h2>
+					<p>完整的 API 文档，包含示例和最佳实践。所有端点支持 JSON 格式并返回结构化响应。</p>
 					
 					<div class="api-endpoint">
 						<h3>
 							<span class="method">POST</span>
 							<span class="endpoint-url">/api/challenge</span>
-							<span class="status-badge">Generate Challenge</span>
+							<span class="status-badge">生成挑战</span>
 						</h3>
-						<p>Creates a new CAPTCHA challenge with cryptographically secure tokens and returns challenge data for client rendering.</p>
+						<p>创建新的验证码挑战，返回加密安全的 token 和挑战数据供客户端渲染。</p>
 						
-						<h4>Request Example:</h4>
+						<h4>请求示例：</h4>
 						<div class="code-block">fetch('<span class="string">/api/challenge</span>', {
-  method: '<span class="string">POST</span>',
-  headers: {
-    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
-  }
-})</div>
+	  method: '<span class="string">POST</span>',
+	  headers: {
+	    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+	  }
+	})</div>
 						
-						<h4>Response Example:</h4>
+						<h4>响应示例：</h4>
 						<div class="code-block">{
-  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39ed75e6e4cc152436cc0d94363de6</span>",
-  "<span class="key">challenge</span>": "<span class="string">{ "c": 50, "s": 32, "d": 4 }</span>",
-  "<span class="key">expires</span>": <span class="number">1753924498818</span>
-}</div>
+	  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39ed75e6e4cc152436cc0d94363de6</span>",
+	  "<span class="key">challenge</span>": "<span class="string">{ \"c\": 50, \"s\": 32, \"d\": 4 }</span>",
+	  "<span class="key">expires</span>": <span class="number">1753924498818</span>
+	}</div>
 					</div>
 					
 					<div class="api-endpoint">
 						<h3>
 							<span class="method">POST</span>
 							<span class="endpoint-url">/api/redeem</span>
-							<span class="status-badge">Verify Solution</span>
+							<span class="status-badge">验证解答</span>
 						</h3>
-						<p>Validates user-submitted CAPTCHA solution and returns verification token for subsequent API calls.</p>
+						<p>验证用户提交的验证码解答，成功时返回可用的验证 token。</p>
 						
 						<div class="params">
-							<h4>Request Parameters:</h4>
+							<h4>请求参数：</h4>
 							<div class="param">
 								<span class="param-name">token</span> 
-								<span class="param-type">(string, required)</span> - Challenge token from /api/challenge
+								<span class="param-type">(string, 必填)</span> - 从 /api/challenge 获取的挑战 token
 							</div>
 							<div class="param">
 								<span class="param-name">solutions</span> 
-								<span class="param-type">(number[], required)</span> - Array of user solution indices
+								<span class="param-type">(number[], 必填)</span> - 用户选择的解答索引数组
 							</div>
 						</div>
 						
-						<h4>Request Example:</h4>
+						<h4>请求示例：</h4>
 						<div class="code-block">fetch('<span class="string">/api/redeem</span>', {
-  method: '<span class="string">POST</span>',
-  headers: {
-    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
-  },
-  body: JSON.stringify({
-    <span class="key">token</span>: '<span class="string">c6bd7fd0bea728b5405f0e3637dca6d1b88aaf33589809a103</span>',
-    <span class="key">solutions</span>: [<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>]
-  })
-})</div>
+	  method: '<span class="string">POST</span>',
+	  headers: {
+	    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+	  },
+	  body: JSON.stringify({
+	    <span class="key">token</span>: '<span class="string">c6bd7fd0bea728b5405f0e3637dca6d1b88aaf33589809a103</span>',
+	    <span class="key">solutions</span>: [<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>]
+	  })
+	})</div>
 						
-						<h4>Response Example:</h4>
+						<h4>响应示例：</h4>
 						<div class="code-block">{
-  "<span class="key">success</span>": <span class="boolean">true</span>,
-  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>",
-}</div>
+	  "<span class="key">success</span>": <span class="boolean">true</span>,
+	  "<span class="key">token</span>": "<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>"
+	}</div>
 					</div>
 					
 					<div class="api-endpoint">
 						<h3>
 							<span class="method">POST</span>
 							<span class="endpoint-url">/api/validate</span>
-							<span class="status-badge">Token Validation</span>
+							<span class="status-badge">Token 验证</span>
 						</h3>
-						<p>Validates previously issued tokens and optionally consumes them for one-time use scenarios.</p>
+						<p>验证已颁发的 token 有效性，可选择是否消耗该 token（一次性使用）。</p>
 						
 						<div class="params">
-							<h4>Request Parameters:</h4>
+							<h4>请求参数：</h4>
 							<div class="param">
 								<span class="param-name">token</span> 
-								<span class="param-type">(string, required)</span> - Verification token to validate
+								<span class="param-type">(string, 必填)</span> - 需要验证的 token
 							</div>
 							<div class="param">
 								<span class="param-name">keepToken</span> 
-								<span class="param-type">(boolean, optional)</span> - Preserve token for reuse (default: false)
+								<span class="param-type">(boolean, 可选)</span> - 是否保留 token 供重复使用（默认：false）
 							</div>
 						</div>
 						
-						<h4>Request Example:</h4>
+						<h4>请求示例：</h4>
 						<div class="code-block">fetch('<span class="string">/api/validate</span>', {
-  method: '<span class="string">POST</span>',
-  headers: {
-    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
-  },
-  body: JSON.stringify({
-    <span class="key">token</span>: '<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>',
-    <span class="key">keepToken</span>: <span class="boolean">false</span>
-  })
-})</div>
+	  method: '<span class="string">POST</span>',
+	  headers: {
+	    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+	  },
+	  body: JSON.stringify({
+	    <span class="key">token</span>: '<span class="string">785975238a3c4f0c1b0c39:ed75e6e4cc152436cc0d94363de6</span>',
+	    <span class="key">keepToken</span>: <span class="boolean">false</span>
+	  })
+	})</div>
 						
-						<h4>Response Example:</h4>
+						<h4>响应示例：</h4>
 						<div class="code-block">{
-  "<span class="key">success</span>": <span class="boolean">true</span>
-}</div>
+	  "<span class="key">success</span>": <span class="boolean">true</span>
+	}</div>
+					</div>
+
+					<div class="api-endpoint" style="border-color: rgba(0, 113, 227, 0.3); background: var(--accent-soft);">
+						<h3>
+							<span class="method">POST</span>
+							<span class="endpoint-url">/api/siteverify</span>
+							<span class="status-badge" style="background: var(--success-color); color: #fff;">✨ Twikoo 兼容</span>
+						</h3>
+						<p><strong>本项目新增端点</strong>，完全兼容官方 Cap 的 siteverify 验证规范，供 Twikoo 后端调用以验证前端提交的验证码 token。</p>
+						
+						<div class="params">
+							<h4>请求参数：</h4>
+							<div class="param">
+								<span class="param-name">secret</span> 
+								<span class="param-type">(string, 必填)</span> - 与 Cloudflare Secrets 中设置的 CAP_SECRET_KEY 一致
+							</div>
+							<div class="param">
+								<span class="param-name">response</span> 
+								<span class="param-type">(string, 必填)</span> - 前端提交的 capToken 验证令牌
+							</div>
+						</div>
+						
+						<h4>请求示例：</h4>
+						<div class="code-block">fetch('<span class="string">/api/siteverify</span>', {
+	  method: '<span class="string">POST</span>',
+	  headers: {
+	    '<span class="key">Content-Type</span>': '<span class="string">application/json</span>'
+	  },
+	  body: JSON.stringify({
+	    <span class="key">secret</span>: '<span class="string">你的CAP_SECRET_KEY</span>',
+	    <span class="key">response</span>: '<span class="string">前端提交的capToken</span>'
+	  })
+	})</div>
+						
+						<h4>响应示例：</h4>
+						<div class="code-block">{
+	  "<span class="key">success</span>": <span class="boolean">true</span>
+	}</div>
 					</div>
 				</div>
 				
 				<div class="section">
-					<h2>Integration Guide</h2>
+					<h2>集成指南</h2>
 					<ol class="usage-flow">
-						<li><strong>Generate Challenge</strong>: Request a new CAPTCHA via <code>/api/challenge</code> endpoint</li>
-						<li><strong>Render UI</strong>: Display the challenge content in your frontend using our SDK or custom implementation</li>
-						<li><strong>Collect Solution</strong>: Capture user interaction and prepare solution array</li>
-						<li><strong>Verify Response</strong>: Submit solution via <code>/api/redeem</code> for server-side validation</li>
-						<li><strong>Token Usage</strong>: Use returned token for protected operations via <code>/api/validate</code></li>
+						<li><strong>生成挑战</strong>：前端 widget 自动调用 <code>/api/challenge</code> 获取验证码挑战</li>
+						<li><strong>用户交互</strong>：用户在界面上完成 PoW 工作量证明（计算挑战）</li>
+						<li><strong>提交解答</strong>：widget 自动将解答提交至 <code>/api/redeem</code> 验证</li>
+						<li><strong>获取令牌</strong>：验证通过后获得 token，随表单一起提交至后端</li>
+						<li><strong>服务端验证</strong>：后端（如 Twikoo）调用 <code>/api/siteverify</code> 最终确认 token 有效</li>
 					</ol>
 				</div>
 				<div class="section">
-					<h2>Error Handling</h2>
-					<p>Our API follows REST conventions with detailed error responses and appropriate HTTP status codes:</p>
+					<h2>Twikoo 配置</h2>
+					<p>登录 Twikoo 管理面板 → <strong>评论管理 → 配置</strong>，添加以下三个环境变量：</p>
+					<div style="overflow-x: auto; margin-top: 16px;">
+						<table style="width: 100%; border-collapse: collapse; border-radius: 18px; overflow: hidden; border: 1px solid var(--border-soft);">
+							<thead>
+								<tr style="background: var(--surface-muted);">
+									<th style="padding: 16px 20px; text-align: left; color: var(--text-primary); font-weight: 600; border-bottom: 1px solid var(--border-soft);">配置项</th>
+									<th style="padding: 16px 20px; text-align: left; color: var(--text-primary); font-weight: 600; border-bottom: 1px solid var(--border-soft);">值</th>
+									<th style="padding: 16px 20px; text-align: left; color: var(--text-primary); font-weight: 600; border-bottom: 1px solid var(--border-soft);">说明</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr style="border-bottom: 1px solid var(--border-soft);">
+									<td style="padding: 16px 20px; font-family: 'SF Mono', monospace; font-weight: 600; color: var(--text-primary);">CAPTCHA_PROVIDER</td>
+									<td style="padding: 16px 20px; color: var(--brand-color); font-weight: 600;">Cap</td>
+									<td style="padding: 16px 20px; color: var(--text-secondary);">启用 Cap 验证码</td>
+								</tr>
+								<tr style="border-bottom: 1px solid var(--border-soft);">
+									<td style="padding: 16px 20px; font-family: 'SF Mono', monospace; font-weight: 600; color: var(--text-primary);">CAP_API_ENDPOINT</td>
+									<td style="padding: 16px 20px; color: var(--brand-color); font-weight: 600;">https://your-diamond/api/</td>
+									<td style="padding: 16px 20px; color: var(--text-secondary);">服务地址（带 /api/ 后缀）</td>
+								</tr>
+								<tr>
+									<td style="padding: 16px 20px; font-family: 'SF Mono', monospace; font-weight: 600; color: var(--text-primary);">CAP_SECRET_KEY</td>
+									<td style="padding: 16px 20px; color: var(--warning-color); font-weight: 600;">与 Cloudflare Secret 一致</td>
+									<td style="padding: 16px 20px; color: var(--text-secondary);">用于服务端验证的密钥</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="section">
+					<h2>错误处理</h2>
+					<p>API 遵循 REST 规范，返回详细的错误信息和适当的 HTTP 状态码：</p>
 					<ul class="error-list">
-						<li><strong>400 Bad Request</strong>: Malformed request body or missing required parameters</li>
-						<li><strong>401 Unauthorized</strong>: Invalid or expired authentication credentials</li>
-						<li><strong>404 Not Found</strong>: Requested endpoint or resource doesn't exist</li>
-						<li><strong>429 Too Many Requests</strong>: Rate limit exceeded, retry with exponential backoff</li>
-						<li><strong>500 Internal Server Error</strong>: Temporary server issue, safe to retry</li>
+						<li><strong>400 Bad Request</strong>：请求格式错误或缺少必要参数</li>
+						<li><strong>403 Forbidden</strong>：siteverify 中 secret 密钥不匹配</li>
+						<li><strong>404 Not Found</strong>：请求的资源或端点不存在</li>
+						<li><strong>410 Gone</strong>：Token 已过期或被消耗</li>
+						<li><strong>429 Too Many Requests</strong>：请求频率过高，请稍后重试</li>
+						<li><strong>500 Internal Server Error</strong>：服务器临时问题，可安全重试</li>
 					</ul>
 				</div>
 			</div>
 			
 			<div class="footer">
-				Powered by Cloudflare Workers & @cap.js/server
+				基于 <a href="https://github.com/xyTom/cap-worker" target="_blank" style="color: var(--brand-color); text-decoration: none;">xyTom/cap-worker</a> 修改 · 为 <a href="https://twikoo.js.org/" target="_blank" style="color: var(--brand-color); text-decoration: none;">Twikoo</a> 适配
 			</div>
 		</div>
 
@@ -1427,15 +1497,15 @@ widget.addEventListener(<span class="string">"solve"</span>, <span class="key">a
 						const btn = document.createElement('button');
 						btn.className = 'copy-btn';
 						btn.type = 'button';
-						btn.textContent = 'Copy';
+						btn.textContent = '复制';
 						btn.addEventListener('click', async () => {
 							try {
 								await navigator.clipboard.writeText(block.dataset.code || '');
-								btn.textContent = 'Copied';
-								setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+								btn.textContent = '已复制';
+								setTimeout(() => { btn.textContent = '复制'; }, 1200);
 							} catch (err) {
-								btn.textContent = 'Failed';
-								setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+								btn.textContent = '失败';
+								setTimeout(() => { btn.textContent = '复制'; }, 1200);
 							}
 						});
 						block.appendChild(btn);
@@ -1445,10 +1515,10 @@ widget.addEventListener(<span class="string">"solve"</span>, <span class="key">a
 				if (widget) {
 					widget.addEventListener("solve", async function (e) {
 						const token = e.detail.token;
-						console.log('CAPTCHA solved, token:', token);
+						console.log('验证码通过，token:', token);
 
 						try {
-							const result = await fetch('https://captcha.gurl.eu.org/api/validate', {
+							const result = await fetch('https://cft.yvyang.qzz.io/api/validate', {
 								method: 'POST',
 								headers: { 'Content-Type': 'application/json' },
 								body: JSON.stringify({
@@ -1457,22 +1527,22 @@ widget.addEventListener(<span class="string">"solve"</span>, <span class="key">a
 								})
 							});
 							const validation = await result.json();
-							console.log('Validation result:', validation);
+							console.log('验证结果:', validation);
 
 							if (validation.success) {
-								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-success">✅ CAPTCHA verified successfully!</div>';
+								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-success">✅ 验证码验证成功！</div>';
 							} else {
-								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ CAPTCHA verification failed.</div>';
+								document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ 验证码验证失败。</div>';
 							}
 						} catch (error) {
-							console.error('Validation error:', error);
-							document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ Validation error occurred.</div>';
+							console.error('验证错误:', error);
+							document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ 验证出错。</div>';
 						}
 					});
 
 					widget.addEventListener("error", function (e) {
-						console.error('CAPTCHA error:', e.detail);
-						document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ CAPTCHA loading error.</div>';
+						console.error('验证码错误:', e.detail);
+						document.getElementById('demoStatus').innerHTML = '<div class="status-message status-error">❌ 验证码加载出错。</div>';
 					});
 				}
 			});
