@@ -159,11 +159,12 @@ Content-Type: application/json
 | 配置项 | 值 | 说明 |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | 启用 Cap 验证码 |
-| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api` | Cap 服务地址（带 `/api` 后缀） |
+| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api/` | Cap 服务地址（带 `/api/` 后缀） |
 | `CAP_SECRET_KEY` | `你的强秘钥` | 与 worker 中 `CAP_SECRET_KEY` 一致 |
 
 
 > 此接口兼容官方 Cap 的 `siteverify` 规范，Twikoo 1.7.14+ 默认调用此端点进行服务端验证。
+> 注意workers域名在中国大陆访问速度可能较慢，建议绑定自定义域名
 
 ---
 
