@@ -1,6 +1,6 @@
 # CAP Worker — Twikoo 适配版 | CAP 验证码服务
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/xyTom/cap-worker)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/qwq-YvYang/Cap-For-Twikoo)
 
 > 📌 **本仓库 Fork 自 [xyTom/cap-worker](https://github.com/xyTom/cap-worker)**，在原版基础上新增了 `/api/siteverify` 接口以兼容 **Twikoo 评论系统**（v1.7.14+）的 Cap 验证码功能。
 
