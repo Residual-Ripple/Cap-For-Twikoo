@@ -4,8 +4,8 @@
 
 > 本项目基于 [xyTom/cap-worker](https://github.com/xyTom/cap-worker) 修改，新增了 `/api/siteverify` 端点以兼容 [Twikoo](https://twikoo.js.org/) 评论系统 v1.7.14+ 的 Cap 验证码官方集成。
 
-[**中文**](https://github.com/qwq-YvYang/Cap-For-Twikoo/README.md) /
-[**English**](https://github.com/qwq-YvYang/Cap-For-Twikoo/readme_Eng.md) /
+[**中文**](https://github.com/qwq-YvYang/Cap-For-Twikoo/blob/main/README.md) /
+[**English**](https://github.com/qwq-YvYang/Cap-For-Twikoo/blob/main/readme_Eng.md)
 
 ---
 
