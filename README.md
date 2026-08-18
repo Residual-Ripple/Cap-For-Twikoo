@@ -102,6 +102,36 @@ npx wrangler secret put CAP_SECRET_KEY
 
 > 💡 注意：`CAP_API_ENDPOINT` 要带 `/api/` 后缀，这样前端 widget 才能正确调用 `/api/challenge` 和 `/api/redeem`，后端（Twikoo）也能调用 `/api/siteverify`。
 
+#### 3. （可选）调整验证难度
+
+PoW 难度默认使用 `@cap.js/server` 库默认值（`c=50, s=32, d=4`）。如需调整，在 Worker 的 **Settings → Variables** 中添加以下环境变量：
+
+| 环境变量 | 默认值 | 说明 |
+|----------|--------|------|
+| `CAP_POW_C` | 50 | 挑战数量（越多越难） |
+| `CAP_POW_S` | 32 | salt 长度 |
+| `CAP_POW_D` | 4 | 目标前缀长度（越大越难） |
+
+> ⚠️ 调高难度会成比例增加用户浏览器端的计算耗时，请谨慎调整。
+
+#### 4. 限流与安全说明
+
+所有 API 端点内置基于来源 IP 的滑动窗口限流（在 Worker 边缘内存计数，**不消耗 KV / DO 存储**，免费计划零成本）：
+
+| 端点 | 限流 | 说明 |
+|------|------|------|
+| `POST /api/challenge` | 20 次/分钟/IP | 防止挑战洪泛导致存储膨胀 |
+| `POST /api/redeem` | 20 次/分钟/IP | 防止解答暴力尝试 |
+| `POST /api/validate` | 30 次/分钟/IP | 防 token 抢注消耗 |
+| `POST /api/siteverify` | 120 次/分钟/IP | Twikoo 后端调用 |
+
+超出限制返回 `429 Too Many Requests`（带 `Retry-After` 响应头）。
+
+> 🔒 **安全建议**：
+> - 请仅在服务端（如 Twikoo 后端）通过 `/api/siteverify` 校验验证码 token，前端 `/api/validate` 端点设计为公开接口，任何知道 token 的站点都能调用并消耗它。
+> - `CAP_SECRET_KEY` 未配置时，`/api/siteverify` 会返回 `503` 并记录错误日志，便于快速发现配置遗漏。
+> - 限流按 IP 计数且每个边缘节点独立，对分布式攻击提供的是成本抬升而非绝对防护；强烈建议在 Cloudflare 面板额外配置 Rate Limiting / WAF 规则。
+
 
 
 ## 🔌 API 参考

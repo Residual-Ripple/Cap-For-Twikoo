@@ -8,7 +8,8 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2025-07-24",
 	"compatibility_flags": ["nodejs_compat"],
-	"workers_dev": false,
+	// 启用 *.workers.dev 子域（与 README 部署指引一致）；生产环境建议绑定自定义域名
+	"workers_dev": true,
 	"migrations": [
 		{
 			"new_sqlite_classes": [
@@ -31,7 +32,13 @@
 	"observability": {
 		"enabled": true
 	},
-    "vars": {}
+    /**
+	 * 环境变量（可选）：
+	 * - CAP_POW_C / CAP_POW_S / CAP_POW_D：覆盖 PoW 默认难度（默认 50 / 32 / 4）
+	 * - CAP_SECRET_KEY：请通过 `wrangler secret put CAP_SECRET_KEY` 设置，
+	 *   切勿写入本文件（敏感信息）
+	 */
+	"vars": {}
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

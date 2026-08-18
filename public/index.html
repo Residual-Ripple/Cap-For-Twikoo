@@ -1070,7 +1070,7 @@
 				}
 			}
 		</style>
-		<script src="https://cft.yvyang.qzz.io/cap.min.js"></script>
+		<script src="/cap.min.js"></script>
 	</head>
 	<body>
 		<div class="bg-animated"></div>
@@ -1114,7 +1114,7 @@
 							<h3>交互式演示</h3>
 							<div class="demo-widget">
 								<div class="demo-widget-container">
-									<cap-widget id="cap" data-cap-api-endpoint="https://cft.yvyang.qzz.io/api/"></cap-widget>
+									<cap-widget id="cap" data-cap-api-endpoint="/api/"></cap-widget>
 								</div>
 								<div class="demo-status" id="demoStatus">
 									<div class="status-message">完成上方验证码以查看效果</div>
@@ -1133,12 +1133,12 @@
 								
 								<div class="tab-content active" data-tab="html">
 									<div class="code-block"><!-- <span class="key">步骤 1：</span>添加脚本 -->
-	&lt;<span class="key">script</span> <span class="key">src</span>=<span class="string">"https://cft.yvyang.qzz.io/cap.min.js"</span>&gt;&lt;/<span class="key">script</span>&gt;
+	&lt;<span class="key">script</span> <span class="key">src</span>=<span class="string">"https://your-cap-worker.example.com/cap.min.js"</span>&gt;&lt;/<span class="key">script</span>&gt;
 	
 	<!-- <span class="key">步骤 2：</span>添加组件 -->
 	&lt;<span class="key">cap-widget</span> 
 	  <span class="key">id</span>=<span class="string">"cap"</span> 
-	  <span class="key">data-cap-api-endpoint</span>=<span class="string">"https://cft.yvyang.qzz.io/api/"</span>&gt;
+	  <span class="key">data-cap-api-endpoint</span>=<span class="string">"https://your-cap-worker.example.com/api/"</span>&gt;
 	&lt;/<span class="key">cap-widget</span>&gt;</div>
 								</div>
 								
@@ -1152,7 +1152,7 @@
 	  console.log(<span class="string">"验证码通过，token："</span>, token);
 	  
 	  <span class="key">// 服务端验证 token</span>
-	  <span class="key">const</span> result = <span class="key">await</span> fetch(<span class="string">'https://cft.yvyang.qzz.io/api/validate'</span>, {
+	  <span class="key">const</span> result = <span class="key">await</span> fetch(<span class="string">'https://your-cap-worker.example.com/api/validate'</span>, {
 	    method: <span class="string">'POST'</span>,
 	    headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
 	    body: JSON.stringify({ 
@@ -1172,7 +1172,7 @@
 	  <span class="key">const</span> { captchaToken } = req.body;
 	  
 	  <span class="key">try</span> {
-	    <span class="key">const</span> validation = <span class="key">await</span> fetch(<span class="string">'https://cft.yvyang.qzz.io/api/validate'</span>, {
+	    <span class="key">const</span> validation = <span class="key">await</span> fetch(<span class="string">'https://your-cap-worker.example.com/api/validate'</span>, {
 	      method: <span class="string">'POST'</span>,
 	      headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
 	      body: JSON.stringify({ 
@@ -1518,7 +1518,7 @@
 						console.log('验证码通过，token:', token);
 
 						try {
-							const result = await fetch('https://cft.yvyang.qzz.io/api/validate', {
+							const result = await fetch('/api/validate', {
 								method: 'POST',
 								headers: { 'Content-Type': 'application/json' },
 								body: JSON.stringify({
