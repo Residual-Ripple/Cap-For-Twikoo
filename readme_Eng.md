@@ -94,7 +94,7 @@ Log in to the Twikoo admin panel → **Comment Management → Configuration**, a
 | Setting | Value | Description |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | Enable Cap captcha |
-| `CAP_API_ENDPOINT` | `https://your-worker-domain.workers.dev/api/` | Cap service address (must end with `/api/`) |
+| `CAP_API_ENDPOINT` | `https://your-worker-domain/api/` | Cap service address (must end with `/api/`) |
 | `CAP_SECRET_KEY` | Same as the key set in the previous step | Secret key used for server-side verification |
 
 > 💡 Note: The `CAP_API_ENDPOINT` must include the `/api/` suffix so that the frontend widget can correctly call `/api/challenge` and `/api/redeem`, and the backend (Twikoo) can call `/api/siteverify`.
@@ -160,7 +160,7 @@ In the Twikoo system's frontend settings:
 | Setting | Value | Description |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | Enable Cap captcha |
-| `CAP_API_ENDPOINT` | `https://your-worker-domain.workers.dev/api/` | Cap service address (with `/api/` suffix) |
+| `CAP_API_ENDPOINT` | `https://your-worker-domain/api/` | Cap service address (with `/api/` suffix) |
 | `CAP_SECRET_KEY` | `your-strong-key` | Must match the `CAP_SECRET_KEY` in the Worker |
 
 > This endpoint is compatible with the official Cap `siteverify` specification. Twikoo 1.7.14+ calls this endpoint by default for server-side verification.

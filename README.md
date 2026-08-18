@@ -97,7 +97,7 @@ npx wrangler secret put CAP_SECRET_KEY
 | 配置项 | 值 | 说明 |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | 启用 Cap 验证码 |
-| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api/` | Cap 服务地址（末尾带 `/api/`） |
+| `CAP_API_ENDPOINT` | `https://你的worker域名/api/` | Cap 服务地址（末尾带 `/api/`） |
 | `CAP_SECRET_KEY` | 与上一步设置的密钥相同 | 用于服务端验证的密钥 |
 
 > 💡 注意：`CAP_API_ENDPOINT` 要带 `/api/` 后缀，这样前端 widget 才能正确调用 `/api/challenge` 和 `/api/redeem`，后端（Twikoo）也能调用 `/api/siteverify`。
@@ -193,7 +193,7 @@ Content-Type: application/json
 | 配置项 | 值 | 说明 |
 |--------|-----|------|
 | `CAPTCHA_PROVIDER` | `Cap` | 启用 Cap 验证码 |
-| `CAP_API_ENDPOINT` | `https://你的worker域名.workers.dev/api/` | Cap 服务地址（带 `/api/` 后缀） |
+| `CAP_API_ENDPOINT` | `https://你的worker域名/api/` | Cap 服务地址（带 `/api/` 后缀） |
 | `CAP_SECRET_KEY` | `你的强秘钥` | 与 worker 中 `CAP_SECRET_KEY` 一致 |
 
 
